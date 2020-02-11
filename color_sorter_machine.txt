@@ -1,0 +1,127 @@
+#include <Servo.h>
+Servo servo_1;
+Servo servo_2;
+
+#define S0 4
+#define S1 5
+#define S2 6
+#define S3 7
+#define sensorOut 8
+int frequency = 0;
+int color=0;
+int j=0;
+void setup() {
+  pinMode(S0, OUTPUT);
+  pinMode(S1, OUTPUT);
+  pinMode(S2, OUTPUT);
+  pinMode(S3, OUTPUT);
+  
+  pinMode(sensorOut, INPUT);
+  
+  // Setting frequency-scaling to 20%
+  digitalWrite(S0,HIGH);
+  digitalWrite(S1,LOW);
+
+  servo_1.attach(11);
+  servo_2.attach(10);
+
+  Serial.begin(9600);
+}
+void loop() {
+system("cls");
+
+ servo_1.write(180);
+   servo_2.write(0);
+
+  delay(600);
+  
+  for(int i = 170; i >= 105; i--) {
+    servo_1.write(i);
+    delay(20);
+  }
+ system("cls");
+
+
+delay(500);
+
+ while(j<=20)
+{
+ system("cls");
+
+
+  digitalWrite(S2,LOW);
+  digitalWrite(S3,LOW);
+  frequency = pulseIn(sensorOut, LOW);
+  int R=frequency;
+  Serial.print("R= ");
+  Serial.print(frequency);
+  Serial.print("  ");
+  delay(100);
+
+ 
+  digitalWrite(S2,HIGH);
+  digitalWrite(S3,HIGH);
+  frequency = pulseIn(sensorOut, LOW);
+  int G=frequency;
+  Serial.print("G= ");
+  Serial.print(frequency);
+  Serial.print("  ");
+  delay(100);
+ 
+  
+  digitalWrite(S2,LOW);
+  digitalWrite(S3,HIGH);
+  frequency = pulseIn(sensorOut, LOW);
+  int B=frequency;
+  Serial.print("B= ");
+  Serial.print(frequency);
+  Serial.println("  ");
+  delay(100);
+
+
+
+  if(R<=130 &R>=105){
+    color = 1; 
+      Serial.print("Detected color is = ");
+    Serial.println("YELLOW");
+  }
+
+ if(R>130 & R<=200){
+    color = 2; 
+    Serial.print("Detected color is  ");
+    Serial.println("BLUE");
+  }
+  delay(50);
+j=j+1;
+  if(color!=0)
+  break;
+}
+delay(1000);  
+
+  switch (color) {
+    case 1:
+    servo_2.write(30);
+    break;
+
+    case 2:
+    servo_2.write(70);
+    break;
+     case 3:
+    break;
+
+  }
+  delay(500);
+  
+  for(int i = 105; i > 15; i--) {
+    servo_1.write(i);
+    delay(20);
+  } 
+  delay(300);
+  
+  for(int i = 15; i < 105; i++) {
+    servo_1.write(i);
+    delay(20);
+  }
+  color=0;
+ 
+}
